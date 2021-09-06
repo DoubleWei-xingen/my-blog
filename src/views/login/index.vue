@@ -50,7 +50,7 @@
       </el-form-item>
 
       <div class="captcha-container">
-        <el-form-item prop="captcha"  class="captcha-input">
+        <el-form-item prop="captcha" class="captcha-input">
           <span class="svg-container">
             <svg-icon icon-class="tree" />
           </span>
@@ -64,14 +64,17 @@
             @keyup.enter.native="handleLogin"
           />
         </el-form-item>
-        <div class="captcha-Img" @click="getcaptcha" v-html="captcha">
-        </div>
+        <div class="captcha-Img" @click="getcaptcha" v-html="captcha"></div>
       </div>
-     
-     <div class="loginFree">
-       <el-checkbox v-model="loginFree" @change="fetchloginFree">七天内免登录</el-checkbox>
-     </div>
-     
+
+      <div class="loginFree">
+        <el-checkbox 
+        v-model="loginFree" 
+        @change="fetchloginFree"
+          >七天内免登录</el-checkbox
+        >
+      </div>
+
       <el-button
         :loading="loading"
         type="primary"
@@ -79,45 +82,44 @@
         @click.native.prevent="handleLogin"
         >登录</el-button
       >
-
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername  } from "@/utils/validate";
-import {fetchcaptcha} from '@/api/captcha'
+import { validUsername } from "@/utils/validate"
+import { fetchcaptcha } from "@/api/captcha"
 export default {
   name: "Login",
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error("请输入身份"));
+        callback(new Error("请输入身份"))
       } else {
-        callback();
+        callback()
       }
     };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error("密码至少六位"));
+        callback(new Error("密码至少六位"))
       } else {
-        callback();
+        callback()
       }
     };
-    const validateCaptcha = (rule,value,callback) =>{
-      console.log(value);
-       if (value === '') {
-        callback(new Error("验证码错误"));
+    const validateCaptcha = (rule, value, callback) => {
+      console.log(value)
+      if (value === "") {
+        callback(new Error("验证码错误"))
       } else {
-        callback();
+        callback()
       }
-    }
+    };
     return {
       loginForm: {
         loginId: "admin",
         loginPwd: "123456",
         captcha: "",
-        remember:7,
+        remember: 7,
       },
       loginRules: {
         loginId: [
@@ -126,72 +128,76 @@ export default {
         password: [
           { required: true, trigger: "blur", validator: validatePassword },
         ],
-        captcha:[{
-          required: true, trigger: "blur", validator: validateCaptcha
-        }]
+        captcha: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: validateCaptcha,
+          },
+        ],
       },
       loading: false,
       passwordType: "password",
       redirect: undefined,
-      captcha:'',
-      loginFree:true,
-    };
+      captcha: "",
+      loginFree: true,
+    }
   },
   watch: {
     $route: {
       handler: function (route) {
-        this.redirect = route.query && route.query.redirect;
+        this.redirect = route.query && route.query.redirect
       },
       immediate: true,
     },
   },
-  created(){
+  created() {
     this.getcaptcha()
   },
   methods: {
     showPwd() {
       if (this.passwordType === "password") {
-        this.passwordType = "";
+        this.passwordType = ""
       } else {
-        this.passwordType = "password";
+        this.passwordType = "password"
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true;
+          this.loading = true
           this.$store
             .dispatch("user/login", this.loginForm)
             .then((res) => {
-              console.log(res);
-              this.$router.push({ path: this.redirect || "/" });
-              this.loading = false;
+              // console.log(res)
+              this.$router.push({ path: this.redirect || "/" })
+              this.loading = false
             })
             .catch((error) => {
-              if(typeof error === "string"){
-                this.$message.error('验证码错误');
+              if (typeof error === "string") {
+                this.$message.error("验证码错误")
               } else {
                 this.$message.error("账号密码错误")
               }
-              this.loading = false;
-              this.getcaptcha();
-              this.loginForm.captcha = '';
+              this.loading = false
+              this.getcaptcha()
+              this.loginForm.captcha = ""
             });
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log("error submit!!")
+          return false
         }
       });
     },
-   async getcaptcha() {
-     this.captcha = await fetchcaptcha();
+    async getcaptcha() {
+      this.captcha = await fetchcaptcha()
     },
-    fetchloginFree(){
-      this.loginForm.remember = this.loginFree ? 7 : ''
-    }
+    fetchloginFree() {
+      this.loginForm.remember = this.loginFree ? 7 : ""
+    },
   },
 };
 </script>
@@ -252,7 +258,7 @@ $cursor: #fff;
     height: 50px;
     margin-left: 15px;
   }
-  .loginFree{
+  .loginFree {
     margin-bottom: 20px;
   }
 }

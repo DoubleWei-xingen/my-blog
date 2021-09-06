@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '控制台', icon: 'el-icon-s-tools' }
+      meta: { title: '控制台', icon: 'el-icon-s-tools' ,auth:true }
     }]
   },
 
@@ -63,7 +63,7 @@ export const constantRoutes = [
       path:"poster",
       name:"Home",
       component:()=> import('@/views/home/index'),
-      meta:{title: "首页标语", icon:"el-icon-house"}
+      meta:{title: "首页标语", icon:"el-icon-house",auth:true}
     }]
   },
 
@@ -72,27 +72,27 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/blog/addBlog',
     name: 'Blog',
-    meta: { title: '文章管理', icon: 'el-icon-document' },
+    meta: { title: '文章管理', icon: 'el-icon-document',auth:true },
     children: [
       {
         path: 'addBlog',
         name: 'addBlog',
         component: () => import('@/views/Blog/addBlog/index'),
-        meta: { title: '添加文章', icon: 'el-icon-edit' }
+        meta: { title: '添加文章', icon: 'el-icon-edit',auth:true }
       },
 
       {
         path: 'bloglist',
         name: 'BlogList',
         component: () => import('@/views/Blog/blogList/index'),
-        meta: { title: '文章列表', icon: 'el-icon-s-fold'}
+        meta: { title: '文章列表', icon: 'el-icon-s-fold',auth:true}
       },
 
       {
         path:"blogType",
         name:'BlogType',
         component:()=> import('@/views/Blog/blogType/index'),
-        meta:{title :'文章分类',icon:"el-icon-share"}
+        meta:{title :'文章分类',icon:"el-icon-share",auth:true}
       }
     ]
   },
@@ -104,20 +104,21 @@ export const constantRoutes = [
     name: 'Project',
     meta: {
       title: '项目管理',
-      icon: 'nested'
+      icon: 'nested',
+      auth:true
     },
     children: [
       {
         path: 'projectList',
         component: () => import('@/views/Project/projectList/index'), // Parent router-view
         name: 'Project',
-        meta: { title: '项目列表',icon:"el-icon-s-unfold" },
+        meta: { title: '项目列表',icon:"el-icon-s-unfold" ,auth:true},
       },
       {
         path: 'addproject',
         component: () => import('@/views/Project/addProject/index'),
         name: 'AddProject',
-        meta: { title: '添加项目' , icon:"el-icon-edit-outline" }
+        meta: { title: '添加项目' , icon:"el-icon-edit-outline",auth:true }
       }
     ]
   },

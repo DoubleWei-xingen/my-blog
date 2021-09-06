@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken,setToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
@@ -14,12 +14,9 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-
-    if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+    const token = getToken();
+    if(token){
+      config.headers["Authorization"] = "Bearer " + token
     }
     return config
   },
@@ -44,7 +41,9 @@ service.interceptors.response.use(
    */
   response => {
     if(response.headers.authentication){
-      
+      // localStorage.setItem("Token",response.headers.authentication);
+      // this.$store.dispatch("user/setToken",response.headers.authentication);
+      setToken(response.headers.authentication);
     }
     const res = response.data
 
