@@ -125,8 +125,8 @@ export default {
   },
   methods: {
     async getBanner() {
-      const res = await setBanner(BannerData);
-      console.log(res);
+      // const res = await setBanner(BannerData);
+      // console.log(res);
       const { data } = await fetchBanner();
       data.filter((item) => {
         if(!item.bigImg.includes(baseUrl) && item.bigImg.includes('/static')){
