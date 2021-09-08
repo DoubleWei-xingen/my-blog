@@ -75,17 +75,17 @@ export const constantRoutes = [
     meta: { title: '文章管理', icon: 'el-icon-document',auth:true },
     children: [
       {
-        path: 'addBlog',
-        name: 'addBlog',
-        component: () => import('@/views/Blog/addBlog/index'),
-        meta: { title: '添加文章', icon: 'el-icon-edit',auth:true }
-      },
-
-      {
         path: 'bloglist',
         name: 'BlogList',
         component: () => import('@/views/Blog/blogList/index'),
         meta: { title: '文章列表', icon: 'el-icon-s-fold',auth:true}
+      },
+
+      {
+        path: 'addBlog',
+        name: 'addBlog',
+        component: () => import('@/views/Blog/addBlog/index'),
+        meta: { title: '添加文章', icon: 'el-icon-edit',auth:true }
       },
 
       {

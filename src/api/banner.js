@@ -5,5 +5,5 @@ export async function fetchBanner(){
 }
 
 export async function setBanner(data){
-    return await request.post('/api/banner',data);
+    return await request.post('/api/banner',data)
 }

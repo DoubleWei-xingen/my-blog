@@ -1,79 +1,130 @@
 <template>
-  <div class="app-container">
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
+<div class="app-contanier">
+   <el-table :data="tableData" border style="width: 100%">
+    <el-table-column
+      label="序号"
+      type="index"
+      :index="indexMethod"
+      align="center"
+      width="50"
     >
-      <el-table-column align="center" label="ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Title">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+    </el-table-column>
+    <el-table-column label="文章标题" width="180" align="center">
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="bottom">
+          <el-image
+            style="width: 200px; height: 200px"
+            :src="scope.row.thumb"
+            fit="fit"
+          ></el-image>
+          <div slot="reference" class="name-wrapper">
+            <el-tag size="medium">{{ scope.row.title }}</el-tag>
+          </div>
+        </el-popover>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="文章描述" width="300" align="center">
+      <template slot-scope="scope">
+        <span style="margin-left: 10px">{{ scope.row.description }}</span>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="浏览数" width="180" align="center">
+      <template slot-scope="scope">
+        <span style="margin-left: 10px">{{ scope.row.scanNumber }}</span>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="评论量" width="100" align="center">
+      <template slot-scope="scope">
+        <span style="margin-left: 10px">{{ scope.row.commentNumber }}</span>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="所属分类" width="100" align="center">
+      <template slot-scope="scope">
+        <span style="margin-left: 10px">{{ scope.row.category.name }}</span>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="创建日期" width="300" align="center" prop="createDate" :formatter="formatData">
+      <!-- <template slot-scope="scope">
+        <span style="margin-left: 10px">{{ scope.row.createDate }}</span>
+      </template> -->
+    </el-table-column>
+    <el-table-column label="操作" align="center">
+      <template slot-scope="scope">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="编辑"
+          placement="top-start"
+          :hide-after="2000"
+        >
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            circle
+            @click="handleEdit(scope.$index, scope.row)"
+          ></el-button>
+        </el-tooltip>
+
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="删除"
+          placement="top-start"
+          :hide-after="2000"
+        >
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            @click="handleDelete(scope.$index, scope.row)"
+          ></el-button>
+        </el-tooltip>
+      </template>
+    </el-table-column>
+  </el-table>
+</div>
+ 
 </template>
 
 <script>
-import { getList } from '@/api/table'
-
+import { fetchallBlog, publishBlog } from "@/api/blog"
+import blogData from "@/utils/blogData"
+import formatdata from '@/utils/formatData'
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
-      list: null,
-      listLoading: true
-    }
+      tableData: [],
+    };
   },
   created() {
-    this.fetchData()
+    this.getallBlog();
   },
   methods: {
-    fetchData() {
-      this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
+    handleEdit(index, row) {
+      console.log(index, row);
+    },
+    handleDelete(index, row) {
+      console.log(index, row);
+    },
+    indexMethod(index) {
+      return index + 1;
+    },
+    async getallBlog() {
+      // const data = await publishBlog(blogData)
+      // console.log(data)
+      // const res = await fetchallBlog()
+      // console.log(res)
+      this.tableData.push(blogData[0].data);
+    },
+    formatData(row,column,value,index){
+      
+      return formatdata(value,true)
     }
-  }
-}
+  },
+};
 </script>
