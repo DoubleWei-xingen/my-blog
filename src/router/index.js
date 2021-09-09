@@ -93,6 +93,14 @@ export const constantRoutes = [
         name:'BlogType',
         component:()=> import('@/views/Blog/blogType/index'),
         meta:{title :'文章分类',icon:"el-icon-share",auth:true}
+      },
+
+      {
+        path:"editBlog/:id",
+        name:'EditBlog',
+        component:()=> import('@/views/Blog/editBlog/index'),
+        meta:{title :'修改文章',icon:"el-icon-share",auth:true},
+        hidden:true
       }
     ]
   },
@@ -187,7 +195,7 @@ export const constantRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

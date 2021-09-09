@@ -1,6 +1,6 @@
 <template>
-  <div class="app-contanier">
-    <div style="padding: 15px">
+  <div class="app-container">
+    <div>
       <el-input
         placeholder="请输入要添加的分类，左边选择分类等级"
         v-model="name"
@@ -25,7 +25,7 @@
       >
     </div>
 
-    <div style="padding: 15px">
+    <div>
       <el-table :data="tableData" height="500" style="width: 100%" border>
         <el-table-column
           type="index"
@@ -112,7 +112,7 @@
 import {
   addBlogType,
   reviseBlog,
-  deleteBlog,
+  deleteBlogType,
   getOneBlogType,
   getBlogType,
 } from "@/api/blogsort";
@@ -136,6 +136,8 @@ export default {
     indexMethod(index) {
       return index + 1;
     },
+
+    // 表单回填
     async handleEdit({ id }) {
       const res = await getOneBlogType(id);
       this.form = res.data;
@@ -152,7 +154,7 @@ export default {
         }
       )
         .then(() => {
-          deleteBlog(id).then((res) => {
+          deleteBlogType(id).then((res) => {
             if (!res.code) {
               this.$message({
                 type: "success",

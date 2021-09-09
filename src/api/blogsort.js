@@ -17,7 +17,7 @@ export async function reviseBlog({id,data}){
 /**
  * 删除分类
  * */ 
-export async function deleteBlog(id){
+export async function deleteBlogType(id){
     return await request.delete(`/api/blogtype/${id}`)
 }
 

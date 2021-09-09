@@ -28,9 +28,10 @@
     </div>
     <div class="block">选择分类</div>
     <el-select 
+    @change="handelChange"
     v-model="form.select" 
-    placeholder="分类等级"
-     size="medium">
+    placeholder="分类等级" 
+    size="medium">
       <el-option
         v-for="item in blogtype"
         :key="item.id"
@@ -40,7 +41,7 @@
     </el-select>
 
     <div style="margin-top: 15px">
-      <el-button type="primary" @click="publicBlog">发布文章</el-button>
+      <el-button type="primary" @click="editBlog">发布文章</el-button>
     </div>
   </div>
 </template>
@@ -50,7 +51,7 @@ import "@toast-ui/editor/dist/toastui-editor.css"
 import { Editor } from "@toast-ui/vue-editor"
 import Upload from "@/components/UploadImage"
 import { getBlogType } from "@/api/blogsort"
-import {publishBlog} from '@/api/blog'
+import {fecthBlog,reviseBlog} from '@/api/blog'
 
 export default {
   data() {
@@ -63,6 +64,7 @@ export default {
         select: "",
       },
       blogtype: [],
+      id:""
     };
   },
   created() {
@@ -75,10 +77,11 @@ export default {
   },
   methods: {
     async fetchBlogType() {
-      const { data } = await getBlogType();
-      this.blogtype = data;
+      const { data } = await getBlogType()
+      this.blogtype = data
+      this.intitBlogData()
     },
-    publicBlog() {
+    editBlog() {
       let htmlContent = this.$refs.toastuiEditor.invoke("getHTML");
       let markdownContent = this.$refs.toastuiEditor.invoke("getMarkdown");
 
@@ -94,17 +97,24 @@ export default {
       };
       // console.log(body)
       if(body.title && body.description && body.categoryId && body.htmlContent){
-        publishBlog(body).then((res)=>{
+        reviseBlog({id:this.form.id,data:body}).then((res)=>{
           // console.log(res)
          this.$router.push('/blog/bloglist')
-         this.$message.success('添加文章成功')
+         this.$message.success('修改文章成功')
         })
       } else {
         this.$message.error('请将文章有关信息填写完整')
       }
     },
+    async intitBlogData(){
+    this.id = this.$route.params.id
+    const {data} = await fecthBlog(this.id)
+    this.$refs.toastuiEditor.invoke("setHTML",data.htmlContent);
+    this.form = data
+    this.form.select = data.category === null ? '' : data.category.id
+    },
     handelChange(){
-      this.$forceUpdata()
+      this.$forceUpdate()
     }
   },
 };

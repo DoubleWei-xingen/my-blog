@@ -62,8 +62,6 @@ export default {
 
 <style>
 .avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -72,6 +70,8 @@ export default {
   border-color: #409eff;
 }
 .avatar-uploader-icon {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
   font-size: 28px;
   color: #8c939d;
   width: 178px;
@@ -85,7 +85,7 @@ export default {
   display: block;
 }
 .upload-title{
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
     margin-right: 10px;
 }

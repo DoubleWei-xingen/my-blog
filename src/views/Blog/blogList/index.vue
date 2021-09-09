@@ -1,5 +1,5 @@
 <template>
-<div class="app-contanier">
+<div class="app-container">
    <el-table :data="tableData" border style="width: 100%">
     <el-table-column
       label="序号"
@@ -11,11 +11,11 @@
     </el-table-column>
     <el-table-column label="文章标题" width="180" align="center">
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="bottom">
+        <el-popover trigger="hover" placement="top">
           <el-image
-            style="width: 200px; height: 200px"
-            :src="scope.row.thumb"
-            fit="fit"
+            style="width: 150px;"
+            :src="scope.row.thumb" 
+            fit="cover"
           ></el-image>
           <div slot="reference" class="name-wrapper">
             <el-tag size="medium">{{ scope.row.title }}</el-tag>
@@ -44,11 +44,11 @@
 
     <el-table-column label="所属分类" width="100" align="center">
       <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.category.name }}</span>
+        <span style="margin-left: 10px">{{ scope.row.category === null ? "未分类" : scope.row.category.name}}</span>
       </template>
     </el-table-column>
 
-    <el-table-column label="创建日期" width="300" align="center" prop="createDate" :formatter="formatData">
+    <el-table-column label="创建日期" width="200" align="center" prop="createDate" :formatter="formatData">
       <!-- <template slot-scope="scope">
         <span style="margin-left: 10px">{{ scope.row.createDate }}</span>
       </template> -->
@@ -66,7 +66,7 @@
             type="primary"
             icon="el-icon-edit"
             circle
-            @click="handleEdit(scope.$index, scope.row)"
+            @click="handleEdit(scope.row)"
           ></el-button>
         </el-tooltip>
 
@@ -81,7 +81,7 @@
             type="danger"
             icon="el-icon-delete"
             circle
-            @click="handleDelete(scope.$index, scope.row)"
+            @click="handleDelete(scope.row)"
           ></el-button>
         </el-tooltip>
       </template>
@@ -92,9 +92,10 @@
 </template>
 
 <script>
-import { fetchallBlog, publishBlog } from "@/api/blog"
-import blogData from "@/utils/blogData"
+import { fetchallBlog,deleteBlog} from "@/api/blog"
+// import blogData from "@/utils/blogData"
 import formatdata from '@/utils/formatData'
+import { baseUrl } from "@/utils/BaseUrl"
 export default {
   data() {
     return {
@@ -105,24 +106,50 @@ export default {
     this.getallBlog();
   },
   methods: {
-    handleEdit(index, row) {
-      console.log(index, row);
+    handleEdit({id}) {
+      this.$router.push(`/blog/editBlog/${id}`)
     },
-    handleDelete(index, row) {
-      console.log(index, row);
+    handleDelete(row) {
+      // console.log(row);
+      this.$confirm(
+        "删除该分类后,此分类下的文章将变为未分类状态, 是否继续?",
+        "是否删除该分类",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          deleteBlog(row.id).then((res) => {
+            // console.log(res)
+            if (!res.code) {
+              this.$message({
+                type: "success",
+                message: "删除成功!",
+              });
+              this.getallBlog();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
     indexMethod(index) {
       return index + 1;
     },
     async getallBlog() {
-      // const data = await publishBlog(blogData)
-      // console.log(data)
-      // const res = await fetchallBlog()
-      // console.log(res)
-      this.tableData.push(blogData[0].data);
+      const {data} = await fetchallBlog()
+      data.rows.filter(item=>{
+       item.thumb = baseUrl + item.thumb
+      })
+      this.tableData = data.rows
     },
     formatData(row,column,value,index){
-      
       return formatdata(value,true)
     }
   },

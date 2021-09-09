@@ -5,18 +5,15 @@ import request from '@/utils/request'
  *发布 
  * */ 
 export async function publishBlog(data) {
-    return await request.post('/api/blog', {
-        body:{
-            data
-        }
-    })
+    return await request.post('/api/blog', data)
 }
 
 /**
  * 修改
  * */ 
-export async function reviseBlog(id) {
-    return await request.put`(/api/blog/${id}`
+export async function reviseBlog({id,data}) {
+    console.log(id,data)
+    return await request.put(`/api/blog/${id}`,data)
 }
 
 /**
