@@ -22,6 +22,7 @@
             placement="right"
             :offset="200"
             width="230"
+            title="博客预览图"
           >
             <el-image
               style="width: 200px"
@@ -30,7 +31,13 @@
               :preview-src-list="srclist"
             ></el-image>
             <div slot="reference" class="name-wrapper">
-              <a href="#" target="_blank" size="medium" @click.prevent="handelToTitle(scope.row)">{{ scope.row.title }}</a>
+              <a
+                href="#"
+                target="_blank"
+                size="medium"
+                @click.prevent="handelToTitle(scope.row)"
+                >{{ scope.row.title }}</a
+              >
             </div>
           </el-popover>
         </template>
@@ -113,6 +120,20 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <div style="margin-top: 30px"></div>
+    <el-pagination 
+    background 
+    :page-size="limit"
+    :page-sizes="[5,6,8]"
+    layout="prev, pager, next,total ,->,sizes,jumper" 
+    :total="count"
+    @size-change="pageChangehandel"
+    @current-change="curentPagehandel"
+    @prev-click="prevClick"
+    @next-click="nextClick"
+  >
+    </el-pagination>
   </div>
 </template>
 
@@ -120,12 +141,16 @@
 import { fetchallBlog, deleteBlog } from "@/api/blog";
 // import blogData from "@/utils/blogData"
 import formatdata from "@/utils/formatData";
-import { baseUrl } from "@/utils/BaseUrl";
+import { baseUrl, linkUrl } from "@/utils/BaseUrl";
 export default {
   data() {
     return {
       tableData: [],
       srclist: [],
+      count:0,
+      curentPage:1,
+      limit:2, 
+      totalPage:0
     };
   },
   created() {
@@ -162,21 +187,43 @@ export default {
         });
     },
     indexMethod(index) {
-      return index + 1;
+      return index + (this.curentPage - 1) * this.limit + 1;
     },
     async getallBlog() {
-      const { data } = await fetchallBlog();
+      const { data } = await fetchallBlog(this.curentPage,this.limit);
       data.rows.filter((item) => {
         item.thumb = baseUrl + item.thumb;
         this.srclist.push(item.thumb);
       });
-      this.tableData = data.rows;
+      this.tableData = data.rows
+      this.count = parseInt(data.total) 
+      this.totalPage = Math.ceil( data.total / this.limit)
+      if(this.curentPage > this.totalPage){
+        this.curentPage = this.totalPage
+        this.getallBlog()
+      }
     },
     formatData(row, column, value, index) {
       return formatdata(value, true);
     },
-    handelToTitle(){
-      
+    handelToTitle({ id }) {
+      window.open(`${linkUrl}/article/${id}`);
+    },
+    pageChangehandel(pagesize){
+        this.limit = pagesize
+        this.curentPage = 1
+       this.getallBlog()
+    },
+    curentPagehandel(pagenum){
+      this.curentPage = parseInt(pagenum)
+      this.getallBlog()
+    },
+    prevClick(){
+      this.curentPage -= 1
+     
+    },
+    nextClick(){
+      this.curentPage += 1
     }
   },
 };
