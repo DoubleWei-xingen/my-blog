@@ -46,8 +46,13 @@ service.interceptors.response.use(
       setToken(response.headers.authentication);
     }
     const res = response.data
-
-    return res;
+    
+    if(res.code === 0){
+      return Promise.resolve(res);
+    } else {
+      return Promise.reject(res)
+    }
+  
     // // if the custom code is not 20000, it is judged as an error.
     // if (res.code !== 20000) {
     //   Message({
