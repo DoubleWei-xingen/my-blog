@@ -190,7 +190,7 @@ export default {
       return index + (this.curentPage - 1) * this.limit + 1;
     },
     async getallBlog() {
-      const { data } = await fetchallBlog(this.curentPage,this.limit);
+      const { data } = await fetchallBlog(this.curentPage,this.limit)
       data.rows.filter((item) => {
         item.thumb = baseUrl + item.thumb;
         this.srclist.push(item.thumb);
@@ -210,9 +210,9 @@ export default {
       window.open(`${linkUrl}/article/${id}`);
     },
     pageChangehandel(pagesize){
-        this.limit = pagesize
-        this.curentPage = 1
-       this.getallBlog()
+      this.limit = pagesize
+      this.curentPage = 1
+      this.getallBlog()
     },
     curentPagehandel(pagenum){
       this.curentPage = parseInt(pagenum)
