@@ -47,11 +47,12 @@ service.interceptors.response.use(
     }
     const res = response.data
     
-    if(res.code === 0){
-      return Promise.resolve(res);
-    } else {
-      return Promise.reject(res)
-    }
+    return res
+    // if(res.code === 0){
+    //   return Promise.resolve(res);
+    // } else {
+    //   return Promise.reject(res)
+    // }
   
     // // if the custom code is not 20000, it is judged as an error.
     // if (res.code !== 20000) {

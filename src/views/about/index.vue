@@ -1,15 +1,66 @@
 <template>
-  <div class="About">
-      <h1>关于我</h1>
+  <div class="app-container">
+    <div class="block">关于我</div>
+    <el-input
+      v-model="url"
+      placeholder="请输入内容"
+      :disabled="isDisabled"
+    ></el-input>
+    <el-button type="primary" style="margin-top: 15px" @click="clickHandle">{{btnContent}}</el-button>
   </div>
 </template>
 
 <script>
+import { fetchAboutUrl, reviseAboutUrl } from "@/api/about"
 export default {
-
-}
+  data() {
+    return {
+      url: "",
+      isDisabled: true,
+      btnContent : '编辑'
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+   async fetchData() {
+      const {data} = await fetchAboutUrl()
+      console.log(data)
+      this.url = data
+    },
+    clickHandle(){
+        if(this.btnContent == '编辑'){
+            // 用户要编辑内容
+            this.btnContent = '完成';
+            this.isDisabled = !this.isDisabled;
+        } else {
+            // 用户编辑完成了，要更新内容
+            if(this.url){
+                this.btnContent = '编辑';
+                this.isDisabled = !this.isDisabled;
+                reviseAboutUrl({url:this.url}).then(res=>{
+                    // this.fetchData()
+                })
+                this.$message({
+                    message: '更改成功',
+                    type: 'success'
+                });
+            } else {
+                this.$message({
+                    message: '输入框不能为空',
+                    type: 'warning'
+                });
+            }
+        }
+    }
+  },
+};
 </script>
 
-<style>
-
+<style scoped>
+.block {
+  margin: 15px 0;
+  font-weight: 100;
+}
 </style>

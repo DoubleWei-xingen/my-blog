@@ -22,15 +22,16 @@
 import { getToken} from '@/utils/auth'
 import  {baseUrl}  from '@/utils/BaseUrl'
 export default {
-  props: {
-    uploadtitle: {
-      required: true,
-      type: String,
-    },
-    value:{
-      type: String,
-    },
-  },
+  // props: {
+  //   uploadtitle: {
+  //     required: true,
+  //     type: String,
+  //   },
+  //   value:{
+  //     type: String,
+  //   },
+  // },
+  props:['uploadtitle',"value"],
   created(){
     console.log(this.value)
   },
