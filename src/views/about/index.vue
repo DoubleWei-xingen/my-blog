@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { fetchAboutUrl, reviseAboutUrl } from "@/api/about"
+import { getAbout, editAbout } from "@/api/about.js";
 export default {
   data() {
     return {
@@ -24,10 +24,10 @@ export default {
     this.fetchData();
   },
   methods: {
-   async fetchData() {
-      const {data} = await fetchAboutUrl()
-      console.log(data)
-      this.url = data
+    fetchData() {
+      getAbout().then(({ data }) => {
+        this.url = data;
+      });
     },
     clickHandle(){
         if(this.btnContent == '编辑'){
@@ -39,8 +39,8 @@ export default {
             if(this.url){
                 this.btnContent = '编辑';
                 this.isDisabled = !this.isDisabled;
-                reviseAboutUrl({url:this.url}).then(res=>{
-                    // this.fetchData()
+                editAbout({url : this.url}).then(res=>{
+                    console.log(res,'cvdf');
                 })
                 this.$message({
                     message: '更改成功',

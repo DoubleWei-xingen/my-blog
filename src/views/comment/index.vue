@@ -33,6 +33,9 @@
         </template>
       </el-table-column>
 
+       <el-table-column label="评论文章" align="center" width="150">
+        <template>{{ title }}</template>
+       </el-table-column>
       <el-table-column label="评论内容" align="center">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.content }}</span>
@@ -87,6 +90,7 @@
 
 <script>
 import { fetchComments, deleteComments } from "@/api/commonts"
+import {fecthBlog } from "@/api/blog"
 // import blogData from "@/utils/blogData"
 import formatdata from "@/utils/formatData"
 import { baseUrl, linkUrl } from "@/utils/BaseUrl"
@@ -98,7 +102,8 @@ export default {
       count:0,
       curentPage:1,
       limit:2, 
-      totalPage:0
+      totalPage:0,
+      title:''
     };
   },
   created() {

@@ -1,11 +1,10 @@
 import request from '@/utils/request'
 
-export async function fetchComments(page =1,limit=10,blogid=-1){
+export async function fetchComments(page =1,limit=10,){
     return request.get('/api/comment',{
         params:{
             page,
             limit,
-            blogid
         }
     })
 }
