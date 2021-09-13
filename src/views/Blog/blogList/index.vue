@@ -125,7 +125,7 @@
     <el-pagination 
     background 
     :page-size="limit"
-    :page-sizes="[5,6,8]"
+    :page-sizes="[2,4,5]"
     layout="prev, pager, next,total ,->,sizes,jumper" 
     :total="count"
     @size-change="pageChangehandel"
